@@ -1,54 +1,26 @@
 import pandas as pd
+import pickle
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Load labeled dataset
+# Load dataset
 df = pd.read_csv("data/labeled_commits.csv")
 
-print("Loaded dataset shape:", df.shape)
+# Features & target
+X = df["message"]
+y = df["is_bug_fix"]
 
-# -------------------------------
-# Basic Feature Engineering
-# -------------------------------
+# TF-IDF Vectorization
+vectorizer = TfidfVectorizer(
+    max_features=5000,
+    stop_words='english'
+)
 
-df["code_churn"] = df["lines_added"] + df["lines_deleted"]
-df["net_change"] = df["lines_added"] - df["lines_deleted"]
+X_vectorized = vectorizer.fit_transform(X)
 
-df["date"] = pd.to_datetime(df["date"], utc=True, errors="coerce")
-df = df.dropna(subset=["date"])
+# Save vectorizer
+pickle.dump(vectorizer, open("vectorizer.pkl", "wb"))
 
-df["year"] = df["date"].dt.year
-df["month"] = df["date"].dt.month
-
-# -------------------------------
-# Historical File-Level Features
-# -------------------------------
-
-# Sort by date to maintain history order
-df = df.sort_values("date")
-
-# Count previous modifications per file
-df["previous_changes"] = df.groupby("file_name").cumcount()
-
-# Count number of unique developers per file
-developer_counts = df.groupby("file_name")["author"].nunique()
-df["developer_count"] = df["file_name"].map(developer_counts)
-
-# -------------------------------
-# Final Feature Selection
-# -------------------------------
-
-final_df = df[[
-    "lines_added",
-    "lines_deleted",
-    "nloc",
-    "code_churn",
-    "net_change",
-    "previous_changes",
-    "developer_count",
-    "is_bug_fix"
-]]
-
-print("Final dataset shape:", final_df.shape)
-
-final_df.to_csv("data/final_dataset.csv", index=False)
+# Save processed data
+pickle.dump((X_vectorized, y), open("processed_data.pkl", "wb"))
 
 print("Feature engineering completed!")

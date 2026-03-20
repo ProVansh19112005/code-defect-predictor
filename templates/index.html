@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Code Defect Predictor</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        form {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input, textarea {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 250px;
+        }
+
+        button {
+            background: #22c55e;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h2>🚀 Code Defect Predictor</h2>
+
+<div class="container">
+
+    <!-- NLP MODE -->
+    <form action="/predict_text" method="post">
+        <h3>Quick Prediction</h3>
+        <textarea name="message" placeholder="Enter commit message"></textarea>
+        <button type="submit">Predict</button>
+    </form>
+
+    <!-- NUMERIC MODE -->
+    <form action="/predict_numeric" method="post">
+        <h3>Advanced Prediction</h3>
+        <input name="nloc" placeholder="nloc">
+        <input name="previous_changes" placeholder="previous_changes">
+        <input name="developer_count" placeholder="developer_count">
+        <input name="code_churn" placeholder="code_churn">
+        <input name="net_change" placeholder="net_change">
+        <input name="lines_added" placeholder="lines_added">
+        <input name="lines_deleted" placeholder="lines_deleted">
+        <button type="submit">Predict</button>
+    </form>
+
+</div>
+
+</body>
+</html>
