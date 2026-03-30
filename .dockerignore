@@ -1,2 +1,5 @@
-fly.toml
-.venv
+venv/
+__pycache__/
+*.csv
+data/
+notebooks/
